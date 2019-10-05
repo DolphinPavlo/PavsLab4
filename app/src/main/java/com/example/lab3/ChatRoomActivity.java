@@ -2,11 +2,13 @@ package com.example.lab3;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -19,7 +21,7 @@ import java.util.Arrays;
 
 public class ChatRoomActivity extends AppCompatActivity {
 
-    ArrayList<Message> objects = new ArrayList<>();
+    ArrayList<Message> list = new ArrayList<>();
     BaseAdapter myAdapter;
     Button sendButton;
     Button recieveButton;
@@ -30,7 +32,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat_room);
 
         ListView theList = findViewById(R.id.listView);
-        theList.setAdapter( myAdapter = new MyListAdapter() );
+        theList.setAdapter(myAdapter = new MyListAdapter());
         myAdapter.notifyDataSetChanged();
 
         sendButton = findViewById(R.id.sendButton);
@@ -39,7 +41,7 @@ public class ChatRoomActivity extends AppCompatActivity {
             public void onClick(View view) {
                 TextView textView = findViewById(R.id.textBox);
                 Message message = new Message(textView.getText().toString(), true);
-                objects.add(0, message);
+                list.add(0, message);
                 myAdapter.notifyDataSetChanged();
                 textView.setText("");
             }
@@ -51,7 +53,7 @@ public class ChatRoomActivity extends AppCompatActivity {
             public void onClick(View view) {
                 TextView textView = findViewById(R.id.textBox);
                 Message message = new Message(textView.getText().toString(), false);
-                objects.add(0, message);
+                list.add(0, message);
                 myAdapter.notifyDataSetChanged();
                 textView.setText("");
             }
@@ -60,33 +62,33 @@ public class ChatRoomActivity extends AppCompatActivity {
 
     private class MyListAdapter extends BaseAdapter {
 
+
         public int getCount() {
-            return objects.size();
+            return list.size();
         }
 
         public Message getItem(int position) {
-            return objects.get(position);
+            return list.get(position);
         }
 
-        public long getItemId(int p) {
-            return p;
+        public long getItemId(int position) {
+            return position;
         }
 
-        public View getView(int p, View recycled, ViewGroup parent)
-        {
-            Message message = getItem(p);
+        public View getView(int position, View convertView, ViewGroup parent) {
+            Message message = getItem(position);
             int layout;
             if (message.isSend) {
                 layout = R.layout.sendlayout;
             } else {
                 layout = R.layout.receivelayout;
             }
-            if (recycled == null) {
-                recycled = getLayoutInflater().inflate(layout, parent, false);
-                TextView textView = recycled.findViewById(R.id.message);
+            if (convertView == null) {
+                convertView = getLayoutInflater().inflate(layout, parent, false);
+                TextView textView = convertView.findViewById(R.id.message);
                 textView.setText(message.message);
             }
-            return recycled;
+            return convertView;
         }
     }
 }
