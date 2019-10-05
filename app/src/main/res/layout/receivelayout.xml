@@ -8,7 +8,7 @@
         android:id="@+id/receiveAvatar"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:src="@drawable/receiveavatar"
+        android:src="@drawable/hillary"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         />

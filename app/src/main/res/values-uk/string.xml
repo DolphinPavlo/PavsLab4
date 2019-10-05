@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ЛАБ 3</string>
+    <string name="lab3line1">Веди свый еьаил тут:</string>
+    <string name="lab3line2">Друкуй имаил тут</string>
+    <string name="lab3line3">Друкуй пароль тут:</string>
+    <string name="lab3line4">Друкуй пароль тут</string>
+    <string name="loginbutton">Логин</string>
+
+    <string name="lab3line5">Твый профайл</string>
+    <string name="lab3line6">Твое имя:</string>
+    <string name="lab3line7">Введи свое имя</string>
+    <string name="lab3line8">Твой имаил:</string>
+    <string name="lab3line9">Введи свой имаил</string>
+    <string name="buttontext1">Твоя картинка:</string>
+    <string name="buttontext2">Нажми кнопку выша и сделай фото</string>
+    <string name="receive">получить</string>
+    <string name="send">отправить</string>
+    <string name="chat">Начать чат</string>
+    <string name="type_here">рукуй тут</string>
+
+</resources>

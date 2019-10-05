@@ -8,7 +8,7 @@
         android:id="@+id/sendAvatar"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:src="@drawable/sendavatar"
+        android:src="@drawable/trump"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         />
