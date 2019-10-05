@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ЛАБ 3</string>
+    <string name="app_name">ЛАБ 4</string>
     <string name="lab3line1">Веди свый еьаил тут:</string>
     <string name="lab3line2">Друкуй имаил тут</string>
     <string name="lab3line3">Друкуй пароль тут:</string>
@@ -17,6 +17,6 @@
     <string name="receive">получить</string>
     <string name="send">отправить</string>
     <string name="chat">Начать чат</string>
-    <string name="type_here">рукуй тут</string>
+    <string name="type_here">Друкуй тут</string>
 
 </resources>
