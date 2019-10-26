@@ -1,7 +1,5 @@
 package com.example.lab3;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +11,8 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.w3c.dom.Text;
 
@@ -40,7 +40,7 @@ public class ChatRoomActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 TextView textView = findViewById(R.id.textBox);
-                Message message = new Message(textView.getText().toString(), true);
+                Message message = new Message(R.id.textBox,textView.getText().toString(),true, true);
                 list.add(0, message);
                 myAdapter.notifyDataSetChanged();
                 textView.setText("");
@@ -52,7 +52,8 @@ public class ChatRoomActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 TextView textView = findViewById(R.id.textBox);
-                Message message = new Message(textView.getText().toString(), false);
+                Message message = new Message(R.id.textBox, textView.getText().toString(), false,false);
+                // Message message = new Message(sent, text, false, false);
                 list.add(0, message);
                 myAdapter.notifyDataSetChanged();
                 textView.setText("");
@@ -78,7 +79,9 @@ public class ChatRoomActivity extends AppCompatActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             Message message = getItem(position);
             int layout;
-            if (message.isSend) {
+            if (message.isSent) {
+                //    if (message.isSend) {
+
                 layout = R.layout.sendlayout;
             } else {
                 layout = R.layout.receivelayout;
@@ -86,7 +89,7 @@ public class ChatRoomActivity extends AppCompatActivity {
             if (convertView == null) {
                 convertView = getLayoutInflater().inflate(layout, parent, false);
                 TextView textView = convertView.findViewById(R.id.message);
-                textView.setText(message.message);
+                textView.setText(message.text);
             }
             return convertView;
         }
