@@ -1,97 +1,194 @@
 package com.example.lab3;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.w3c.dom.Text;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
+
+
 public class ChatRoomActivity extends AppCompatActivity {
 
-    ArrayList<Message> list = new ArrayList<>();
+    ArrayList<Message> objects = new ArrayList<>();
+
     BaseAdapter myAdapter;
-    Button sendButton;
-    Button recieveButton;
+
+    EditText mess;
+
+    Message message;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_room);
 
+        mess = findViewById(R.id.textBox);
+
+
+        //get a database:
+        MyDatabaseOpenHelper dbOpener = new MyDatabaseOpenHelper(this);
+        SQLiteDatabase db = dbOpener.getWritableDatabase();
+
+        //query all the results from the database:
+        String[] columns = {MyDatabaseOpenHelper.COL_ID, MyDatabaseOpenHelper.COL_TEXT, MyDatabaseOpenHelper.COL_SENT, MyDatabaseOpenHelper.COL_RECEIVED};
+        Cursor results = db.query(false, MyDatabaseOpenHelper.TABLE_NAME, columns, null, null, null, null, null, null);
+
+
+        //find the column indices:
+        int idColIndex = results.getColumnIndex(MyDatabaseOpenHelper.COL_ID);
+        int textColIndex = results.getColumnIndex(MyDatabaseOpenHelper.COL_TEXT);
+        int isSentColIndex = results.getColumnIndex(MyDatabaseOpenHelper.COL_SENT);
+        int isReceivedColIndex = results.getColumnIndex(MyDatabaseOpenHelper.COL_RECEIVED);
+
+
+        //iterate over the results, return true if there is a next item:
+        while (results.moveToNext()) {
+
+
+            long id = results.getLong(idColIndex);
+            String text = results.getString(textColIndex);
+            String sent = results.getString(isSentColIndex);
+            String received = results.getString(isReceivedColIndex);
+
+            if (sent.equals("1")) {
+                objects.add(new Message(id, text, true, false));
+            } else if (received.equals("1")) {
+                objects.add(new Message(id, text, false, true));
+
+            }
+
+        }
+
+        //You only need 2 lines in onCreate to actually display data:
         ListView theList = findViewById(R.id.listView);
         theList.setAdapter(myAdapter = new MyListAdapter());
-        myAdapter.notifyDataSetChanged();
 
-        sendButton = findViewById(R.id.sendButton);
-        sendButton.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TextView textView = findViewById(R.id.textBox);
-                Message message = new Message(R.id.textBox,textView.getText().toString(),true, true);
-                list.add(0, message);
-                myAdapter.notifyDataSetChanged();
-                textView.setText("");
-            }
+        theList.setOnItemClickListener((lv, vw, pos, id) -> {
+
+            Toast.makeText(ChatRoomActivity.this,
+                    "You clicked on:" + pos, Toast.LENGTH_SHORT).show();
+
         });
 
-        recieveButton = findViewById(R.id.receiveButton);
-        recieveButton.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TextView textView = findViewById(R.id.textBox);
-                Message message = new Message(R.id.textBox, textView.getText().toString(), false,false);
-                // Message message = new Message(sent, text, false, false);
-                list.add(0, message);
-                myAdapter.notifyDataSetChanged();
-                textView.setText("");
-            }
+        Button addButton = findViewById(R.id.sendButton);
+        addButton.setOnClickListener(clik ->
+        {
+
+            String text = mess.getText().toString();
+            String isSent = "1";
+            String isReceived = "0";
+
+            //add to the database and get the new ID
+            ContentValues newRowValues = new ContentValues();
+            //put string name in the NAME column:
+            newRowValues.put(MyDatabaseOpenHelper.COL_TEXT, text);
+            newRowValues.put(MyDatabaseOpenHelper.COL_SENT, isSent);
+            newRowValues.put(MyDatabaseOpenHelper.COL_RECEIVED, isReceived);
+            //insert in the database:
+            long newId = db.insert(MyDatabaseOpenHelper.TABLE_NAME, null, newRowValues);
+
+
+            objects.add(new Message(newId, text, true, false));
+
+
+            myAdapter.notifyDataSetChanged(); //update yourself
+            mess.getText().clear();
         });
+
+        Button receiveButton = findViewById(R.id.receiveButton);
+        receiveButton.setOnClickListener(clik ->
+        {
+            String text = mess.getText().toString();
+            String isSent = "Trump";
+            String isReceived = "Hill";
+
+            //add to the database and get the new ID
+            ContentValues newRowValues = new ContentValues();
+            //put string name in the NAME column:
+            newRowValues.put(MyDatabaseOpenHelper.COL_TEXT, text);
+            newRowValues.put(MyDatabaseOpenHelper.COL_SENT, isSent);
+            newRowValues.put(MyDatabaseOpenHelper.COL_RECEIVED, isReceived);
+            //insert in the database:
+            long newId = db.insert(MyDatabaseOpenHelper.TABLE_NAME, null, newRowValues);
+
+
+            objects.add(new Message(newId, text, false, true));
+
+            myAdapter.notifyDataSetChanged();
+            mess.getText().clear();
+        });
+
+        printCursor(results);
+    }
+
+
+
+    public void printCursor(Cursor c) {
+        //database version number
+        int v = MyDatabaseOpenHelper.VERSION_NUM;
+        Log.i("Database version #:", String.valueOf(v));
+        Log.i("Numb of colu in curs:", String.valueOf(c.getColumnCount()));
+        Log.i("Columns names in curs:", Arrays.toString(c.getColumnNames()));
+        Log.i("Numb results in curs:", String.valueOf(c.getCount()));
+
+
+        if(c.moveToFirst()){
+            do{
+                String data = c.getString(c.getColumnIndex("TEXT"));
+                Log.i("Row result:", data);
+            }while (c.moveToNext());
+        }
+
     }
 
     private class MyListAdapter extends BaseAdapter {
 
-
         public int getCount() {
-            return list.size();
-        }
+            return objects.size();
+        } //This function tells how many objects to show
 
         public Message getItem(int position) {
-            return list.get(position);
-        }
+            return objects.get(position);
+        }  //This returns the string at position p
 
-        public long getItemId(int position) {
-            return position;
-        }
+        public long getItemId(int p) {
+            return p;
+        } //This returns the database id of the item at position p
 
-        public View getView(int position, View convertView, ViewGroup parent) {
-            Message message = getItem(position);
-            int layout;
-            if (message.isSent) {
-                //    if (message.isSend) {
+        public View getView(int p, View thisRow, ViewGroup parent) {
+            //View thisRow = recycled;
 
-                layout = R.layout.sendlayout;
-            } else {
-                layout = R.layout.receivelayout;
+            Message msg = getItem(p);
+
+
+            if (msg.getSent()) {
+                thisRow = getLayoutInflater().inflate(R.layout.sendlayout, null);
+
+                TextView itemText = thisRow.findViewById(R.id.message);
+                itemText.setText(msg.getText());
+            } else if (msg.getReceived()) {
+                thisRow = getLayoutInflater().inflate(R.layout.receivelayout, null);
+
+                TextView itemText = thisRow.findViewById(R.id.message);
+                itemText.setText(msg.getText());
             }
-            if (convertView == null) {
-                convertView = getLayoutInflater().inflate(layout, parent, false);
-                TextView textView = convertView.findViewById(R.id.message);
-                textView.setText(message.text);
-            }
-            return convertView;
+            return thisRow;
+
         }
+
     }
 }
