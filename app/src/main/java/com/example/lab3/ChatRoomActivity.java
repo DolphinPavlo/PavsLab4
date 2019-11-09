@@ -64,7 +64,7 @@ public class ChatRoomActivity extends AppCompatActivity {
             String sent = results.getString(isSentColIndex);
             String received = results.getString(isReceivedColIndex);
 
-            if (sent.equals("1")) {
+            if (sent.equals("0")) {
                 objects.add(new Message(id, text, true, false));
             } else if (received.equals("1")) {
                 objects.add(new Message(id, text, false, true));
@@ -89,8 +89,8 @@ public class ChatRoomActivity extends AppCompatActivity {
         {
 
             String text = mess.getText().toString();
-            String isSent = "1";
-            String isReceived = "0";
+            String isSent = "0";
+            String isReceived = "1";
 
             //add to the database and get the new ID
             ContentValues newRowValues = new ContentValues();
@@ -113,8 +113,8 @@ public class ChatRoomActivity extends AppCompatActivity {
         receiveButton.setOnClickListener(clik ->
         {
             String text = mess.getText().toString();
-            String isSent = "Trump";
-            String isReceived = "Hill";
+            String isSent = "0";
+            String isReceived = "1";
 
             //add to the database and get the new ID
             ContentValues newRowValues = new ContentValues();

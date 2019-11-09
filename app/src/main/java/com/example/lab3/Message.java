@@ -12,10 +12,10 @@ public class Message {
     }
 }*/
 
-    long id;
-    String text;
-    Boolean isSent;
-    Boolean isReceived;
+    private long id;
+    private String text;
+    private Boolean isSent;
+    private Boolean isReceived;
 
     public Message() {
         this.text = "";
