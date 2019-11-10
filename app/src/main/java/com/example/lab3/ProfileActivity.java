@@ -12,38 +12,64 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.Objects;
+import static com.example.lab3.R.id.currentWeatherImage;
 
 public class ProfileActivity extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    public static final String ACTIVITY_NAME= "ProfileActivity";
-
     ImageButton mImageButton;
+    public static final String ACTIVITY_NAME = "PROFILE_ACTIVITY";
     Button chatRoomButton;
+    Button weatherForecast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profileactivity);
+
         mImageButton = findViewById(R.id.imageButton);
+        TextView emailTyped  = findViewById(R.id.emailProfileField);
         chatRoomButton = findViewById(R.id.chatRoomButton);
+        String email = getIntent().getStringExtra("ReserveName");
+        weatherForecast = findViewById(R.id.weatherForecastButton);
 
-        Intent mainActivityData = getIntent();
-        String emailMainTyped = mainActivityData.getStringExtra("emailTyped");
 
-        TextView emailTyped = findViewById(R.id.emailProfileField);
-        emailTyped.setText(emailMainTyped);
 
-        if(mImageButton != null)
-            mImageButton.setOnClickListener(clk -> {
-                dispatchTakePictureIntent();
-            });
+        emailTyped.setText(email);
 
-        if(chatRoomButton != null)
-            chatRoomButton.setOnClickListener(v -> {
-                        Intent goToChatPage = new Intent(ProfileActivity.this, ChatRoomActivity.class);
-                        startActivity(goToChatPage);
-            });
+        mImageButton.setOnClickListener(clk -> {
+
+            dispatchTakePictureIntent();
+
+
+        });
+
+
+        chatRoomButton.setOnClickListener(clk -> {
+            Intent goToChatRoomActivity = new Intent(ProfileActivity.this, ChatRoomActivity.class);
+
+
+
+            startActivity(goToChatRoomActivity);
+
+
+
+        });
+
+
+
+        weatherForecast.setOnClickListener(clk -> {
+            Intent goToWeatherForecast = new Intent(ProfileActivity.this, WeatherForecast.class);
+
+
+
+            startActivity(goToWeatherForecast);
+
+
+
+        });
+
+
 
         Log.e(ACTIVITY_NAME,"In function: onCreate()");
     }
