@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/icon1"
+        android:icon="@drawable/icons8_taxi"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        android:title="taxi"/>
+
+    <item android:id="@+id/icon2"
+        android:title="court"
+        android:icon="@drawable/icons8_courthouse"
+        android:orderInCategory="200"
+        app:showAsAction="always"/>
+
+    <item android:id="@+id/icon3"
+        android:title="bench"
+        android:icon="@drawable/icons8_bench"
+        android:orderInCategory="300"
+        app:showAsAction="always"/>
+
+
+    <item android:id="@+id/itemText"
+        android:title="About"
+        android:orderInCategory="300"
+        app:showAsAction="never"/>
+</menu>

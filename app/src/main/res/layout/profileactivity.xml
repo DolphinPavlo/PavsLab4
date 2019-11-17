@@ -31,7 +31,7 @@
         />
 
     <EditText
-        android:id="@+id/emailProfileField"
+        android:id="@+id/userProfileEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
@@ -45,7 +45,7 @@
         />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/profilePictureButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@android:drawable/picture_frame"
@@ -58,7 +58,7 @@
         />
 
     <Button
-        android:id="@+id/chatRoomButton"
+        android:id="@+id/chatButton"
         android:text="@string/chat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
@@ -68,6 +68,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Go to ForeCast"/>
-
+    <Button
+        android:id="@+id/testToolbarButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Go to Toolbar page"/>
 
 </LinearLayout>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CST2335 Lab6</string>
+    <string name="app_name">CST2335 Lab7</string>
 
     <string name="lab3line1">Enter your email address:</string>
     <string name="lab3line2">Type email here</string>
@@ -19,6 +19,8 @@
     <string name="send">send</string>
     <string name="chat">Go to chat</string>
     <string name="type_here">Type here</string>
+
+
 
 
 </resources>
