@@ -20,5 +20,9 @@
     <string name="chat">Go to chat</string>
     <string name="type_here">Type here</string>
 
+    <string name="sendButton">SEND</string>
+    <string name="receiveButton">RECEIVE</string>
+    <string name="textHint">Type Here</string>
+
 
 </resources>

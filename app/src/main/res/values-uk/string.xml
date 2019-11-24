@@ -19,4 +19,8 @@
     <string name="chat">Начать чат</string>
     <string name="type_here">Друкуй тут</string>
 
+    <string name="sendButton">Отправить</string>
+    <string name="receiveButton">Получить</string>
+    <string name="textHint">Друк тут</string>
+
 </resources>

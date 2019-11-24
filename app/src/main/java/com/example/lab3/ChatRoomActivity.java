@@ -20,7 +20,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-
+import static com.example.lab3.MyDatabaseOpenHelper.VERSION_NUM;
 
 public class ChatRoomActivity extends AppCompatActivity {
 
@@ -37,25 +37,30 @@ public class ChatRoomActivity extends AppCompatActivity {
 
     BaseAdapter myAdapter;
 
-    EditText mess;
+    EditText chat;
 
     Message message;
+
     SQLiteDatabase db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_room);
 
-        mess = findViewById(R.id.textBox);
+        chat = findViewById(R.id.chatText);
 
 
         //get a database:
         MyDatabaseOpenHelper dbOpener = new MyDatabaseOpenHelper(this);
-        SQLiteDatabase db = dbOpener.getWritableDatabase();
+        db = dbOpener.getWritableDatabase();
 
         //query all the results from the database:
         String[] columns = {MyDatabaseOpenHelper.COL_ID, MyDatabaseOpenHelper.COL_TEXT, MyDatabaseOpenHelper.COL_SENT, MyDatabaseOpenHelper.COL_RECEIVED};
         Cursor results = db.query(false, MyDatabaseOpenHelper.TABLE_NAME, columns, null, null, null, null, null, null);
+
+
+
 
 
         //find the column indices:
@@ -79,18 +84,24 @@ public class ChatRoomActivity extends AppCompatActivity {
             } else if (received.equals("1")) {
                 objects.add(new Message(id, text, false, true));
             } else {
+
             }
+
 
         }
 
         //You only need 2 lines in onCreate to actually display data:
-        ListView theList = findViewById(R.id.listView);
-        theList.setAdapter(myAdapter = new MyListAdapter());
+        ListView theList = findViewById(R.id.theList);
+        myAdapter = new MyListAdapter();
+        theList.setAdapter(myAdapter);
+
+        boolean isTablet = findViewById(R.id.fragmentLocation) != null; //check if the FrameLayout is loaded
 
         theList.setOnItemClickListener((lv, vw, pos, id) -> {
 
-       //     Toast.makeText(ChatRoomActivity.this,
-         //           "You clicked on:" + pos, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(ChatRoomActivity.this,
+//                    "You clicked on:" + pos, Toast.LENGTH_SHORT).show();
+
             Bundle dataToPass = new Bundle();
             dataToPass.putString(MESSAGE, objects.get(pos).getText());
             dataToPass.putLong(LIST_ITEM_ID, id);
@@ -113,13 +124,18 @@ public class ChatRoomActivity extends AppCompatActivity {
                 nextActivity.putExtras(dataToPass); //send data to next activity
                 startActivityForResult(nextActivity, EMPTY_ACTIVITY); //make the transition
             }
+
+
+
+
+
         });
 
         Button addButton = findViewById(R.id.sendButton);
         addButton.setOnClickListener(clik ->
         {
 
-            String text = mess.getText().toString();
+            String text = chat.getText().toString();
             String isSent = "1";
             String isReceived = "0";
 
@@ -134,16 +150,22 @@ public class ChatRoomActivity extends AppCompatActivity {
 
 
             objects.add(new Message(newId, text, true, false));
+//
+//            message.setId(newId);
+//            message.setText(chat.getText().toString());
+//            message.setSent(true);
+//            message.setReceived(false);
+//            objects.add(message);
 
 
             myAdapter.notifyDataSetChanged(); //update yourself
-            mess.getText().clear();
+            chat.getText().clear();
         });
 
         Button receiveButton = findViewById(R.id.receiveButton);
         receiveButton.setOnClickListener(clik ->
         {
-            String text = mess.getText().toString();
+            String text = chat.getText().toString();
             String isSent = "0";
             String isReceived = "1";
 
@@ -159,8 +181,13 @@ public class ChatRoomActivity extends AppCompatActivity {
 
             objects.add(new Message(newId, text, false, true));
 
-            myAdapter.notifyDataSetChanged();
-            mess.getText().clear();
+//            message.setId(newId);
+//            message.setText(chat.getText().toString());
+//            message.setReceived(true);
+//            message.setSent(false);
+//            objects.add(message);
+            myAdapter.notifyDataSetChanged(); //update yourself
+            chat.getText().clear();
         });
 
         printCursor(results);
@@ -171,20 +198,22 @@ public class ChatRoomActivity extends AppCompatActivity {
     public void printCursor(Cursor c) {
         //database version number
         int v = MyDatabaseOpenHelper.VERSION_NUM;
-        Log.i("Database version #:", String.valueOf(v));
-        Log.i("Numb of colu in curs:", String.valueOf(c.getColumnCount()));
-        Log.i("Columns names in curs:", Arrays.toString(c.getColumnNames()));
-        Log.i("Numb results in curs:", String.valueOf(c.getCount()));
+        Log.i("Database version number", String.valueOf(v));
+        Log.i("Num col in cursor", String.valueOf(c.getColumnCount()));
+        Log.i("Columns names in cursor", Arrays.toString(c.getColumnNames()));
+        Log.i("Num results in cursor", String.valueOf(c.getCount()));
 
 
         if(c.moveToFirst()){
             do{
                 String data = c.getString(c.getColumnIndex("TEXT"));
-                Log.i("Row result:", data);
+                Log.i("Row results", data);
             }while (c.moveToNext());
         }
 
     }
+
+
     //This function only gets called on the phone. The tablet never goes to a new activity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -205,10 +234,12 @@ public class ChatRoomActivity extends AppCompatActivity {
         db.delete(MyDatabaseOpenHelper.TABLE_NAME, "_id=?", new String[]{Long.toString(id)});
     }
 
-    public void deleteListMessageId(int id) {
-        Log.i("Delete this message:", " id=" + id);
+    public void deleteListMessageId(int id)
+    {
+        Log.i("Delete this message:" , " id="+id);
         objects.remove(id);
         myAdapter.notifyDataSetChanged();
+
     }
     private class MyListAdapter extends BaseAdapter {
 
@@ -233,17 +264,25 @@ public class ChatRoomActivity extends AppCompatActivity {
             if (msg.getSent()) {
                 thisRow = getLayoutInflater().inflate(R.layout.sendlayout, null);
 
-                TextView itemText = thisRow.findViewById(R.id.message);
+                TextView itemText = thisRow.findViewById(R.id.sendTextField);
                 itemText.setText(msg.getText());
             } else if (msg.getReceived()) {
                 thisRow = getLayoutInflater().inflate(R.layout.receivelayout, null);
 
-                TextView itemText = thisRow.findViewById(R.id.message);
+                TextView itemText = thisRow.findViewById(R.id.receiveTextField);
                 itemText.setText(msg.getText());
+
+            } else {
+
             }
+
+
             return thisRow;
 
         }
 
+
     }
+
+
 }

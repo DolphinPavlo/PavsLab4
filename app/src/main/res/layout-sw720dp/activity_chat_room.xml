@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="@string/send"/>
+        android:text="@string/sendButton" />
 
     <EditText
         android:id="@+id/chatText"
@@ -21,7 +21,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="0dp"
         android:layout_toRightOf="@id/sendButton"
-        android:hint="@string/type_here" />
+        android:hint="@string/textHint" />
 
     <Button
         android:id="@+id/receiveButton"
@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@id/theList"
         android:layout_alignParentBottom="true"
-        android:text="@string/receive" />
+        android:text="@string/receiveButton" />
 
 
     <ListView
