@@ -33,7 +33,7 @@ public class TestToolbar extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu items for use in the action bar
+
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.toolbar_menu, menu);
 
@@ -44,7 +44,6 @@ public class TestToolbar extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            //what to do when the menu item is selected:
 
             case R.id.icon1:
 
@@ -84,14 +83,14 @@ public class TestToolbar extends AppCompatActivity {
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setPositiveButton("Positive", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Insert message", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 inputText = et.getText().toString();
             }
         })
-                .setNegativeButton("Negative", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // What to do on Cancel
+
                     }
                 }).setView(middle);
 

@@ -3,6 +3,7 @@ package com.example.lab3;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -23,6 +24,15 @@ import java.util.Arrays;
 
 public class ChatRoomActivity extends AppCompatActivity {
 
+    public static final String ITEM_SELECTED = "ITEM";
+    public static final String ITEM_POSITION = "POSITION";
+    public static final String LIST_ITEM_ID = "LIST_ID";
+    public static final String DB_ITEM_ID = "DB_ID";
+    public static final String MESSAGE = "MESSAGE";
+    public static final String IS_SENT = "IS_SENT";
+    public static final String IS_RECEIVED = "IS_RECEIVED";
+    public static final int EMPTY_ACTIVITY = 345;
+
     ArrayList<Message> objects = new ArrayList<>();
 
     BaseAdapter myAdapter;
@@ -30,7 +40,7 @@ public class ChatRoomActivity extends AppCompatActivity {
     EditText mess;
 
     Message message;
-
+    SQLiteDatabase db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,11 +74,11 @@ public class ChatRoomActivity extends AppCompatActivity {
             String sent = results.getString(isSentColIndex);
             String received = results.getString(isReceivedColIndex);
 
-            if (sent.equals("0")) {
+            if (sent.equals("1")) {
                 objects.add(new Message(id, text, true, false));
             } else if (received.equals("1")) {
                 objects.add(new Message(id, text, false, true));
-
+            } else {
             }
 
         }
@@ -79,9 +89,30 @@ public class ChatRoomActivity extends AppCompatActivity {
 
         theList.setOnItemClickListener((lv, vw, pos, id) -> {
 
-            Toast.makeText(ChatRoomActivity.this,
-                    "You clicked on:" + pos, Toast.LENGTH_SHORT).show();
+       //     Toast.makeText(ChatRoomActivity.this,
+         //           "You clicked on:" + pos, Toast.LENGTH_SHORT).show();
+            Bundle dataToPass = new Bundle();
+            dataToPass.putString(MESSAGE, objects.get(pos).getText());
+            dataToPass.putLong(LIST_ITEM_ID, id);
+            dataToPass.putLong(DB_ITEM_ID, objects.get(pos).getId());
+            dataToPass.putString(IS_SENT, objects.get(pos).getSent().toString());
+            dataToPass.putString(IS_RECEIVED, objects.get(pos).getReceived().toString());
 
+            if (isTablet)
+            {
+                ChatDetailFragment dFragment = new ChatDetailFragment(); //add a DetailFragment
+                dFragment.setArguments( dataToPass ); //pass it a bundle for information
+                dFragment.setTablet(true);  //tell the fragment if it's running on a tablet or not
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.fragmentLocation, dFragment) //Add the fragment in FrameLayout
+                        .addToBackStack("AnyName") //make the back button undo the transaction
+                        .commit(); //actually load the fragment.
+            }else{
+                Intent nextActivity = new Intent(ChatRoomActivity.this, EmptyActivity.class);
+                nextActivity.putExtras(dataToPass); //send data to next activity
+                startActivityForResult(nextActivity, EMPTY_ACTIVITY); //make the transition
+            }
         });
 
         Button addButton = findViewById(R.id.sendButton);
@@ -89,8 +120,8 @@ public class ChatRoomActivity extends AppCompatActivity {
         {
 
             String text = mess.getText().toString();
-            String isSent = "0";
-            String isReceived = "1";
+            String isSent = "1";
+            String isReceived = "0";
 
             //add to the database and get the new ID
             ContentValues newRowValues = new ContentValues();
@@ -154,7 +185,31 @@ public class ChatRoomActivity extends AppCompatActivity {
         }
 
     }
+    //This function only gets called on the phone. The tablet never goes to a new activity
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == EMPTY_ACTIVITY)
+        {
+            if(resultCode == RESULT_OK) //if you hit the delete button instead of back button
+            {
+                long listID = data.getLongExtra(LIST_ITEM_ID, 0);
+                deleteListMessageId((int)listID);
+                long dbID = data.getLongExtra(DB_ITEM_ID, 0);
+                deleteDbMessageID((int)dbID);
+            }
+        }
+    }
 
+    public void deleteDbMessageID(int id){
+        db.delete(MyDatabaseOpenHelper.TABLE_NAME, "_id=?", new String[]{Long.toString(id)});
+    }
+
+    public void deleteListMessageId(int id) {
+        Log.i("Delete this message:", " id=" + id);
+        objects.remove(id);
+        myAdapter.notifyDataSetChanged();
+    }
     private class MyListAdapter extends BaseAdapter {
 
         public int getCount() {

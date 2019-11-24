@@ -8,6 +8,7 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -15,7 +16,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".TestToolbar"></activity>
+        <activity android:name=".ChatDetailFragment"></activity>
+        <activity android:name=".EmptyActivity" />
+        <activity android:name=".TestToolbar" />
         <activity android:name=".WeatherForecast" />
         <activity android:name=".ChatRoomActivity" />
         <activity android:name=".ProfileActivity" />
